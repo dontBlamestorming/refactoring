@@ -1,15 +1,22 @@
+/*
+  목표 - 연극의 장르를 추가하고 각 장르마다 공연료와 적립포인트 계산법을 다르게 적용하자.
+        이를 위해서는 조건부 로직을 다형성을 통해 변환시키는 것이 좋다.
+        상속계층을 구성하여 희극 서브클래스와 비극 서브클래스가 각자의 구체적인 계산로직을 정의하는 것이다.
+*/
+
 export default function createStatementData(invoice, plays) {
-  const result = {} // 중간 데이터
-  result.customer = invoice.customer // 고객데이터를 중간데이터로
+  const result = {}
+  result.customer = invoice.customer
   result.performances = invoice.performances.map(enrichPerformance)
   result.totalAmount = totalAmount(result)
   result.totalVolumeCredits = totalVolumeCredits(result)
 
   return result
 
-  function enrichPerformance(aPerformance) {
+  function enrichPerformance(aPerformance) { // ***
+    const calculator = new PerformanceCalculator(aPerformance)
     const result = Object.assign({}, aPerformance)
-    result.play = playFor(result) // 중간 데이터에 연극 정보 저장
+    result.play = playFor(result)
     result.amount = amountFor(result)
     result.volumeCredits = volumeCreditsFor(result)
 
@@ -20,8 +27,8 @@ export default function createStatementData(invoice, plays) {
     return plays[aPerformance.playID];
   }
 
-  function amountFor(aPerformance) { // 값이 바뀌지 않는 변수는 매개변수로 전달
-    let result = 0; // 변수를 초기화 && 명확한 이름으로 변경
+  function amountFor(aPerformance) {
+    let result = 0;
 
     switch (aPerformance.play.type) {
       case "tragedy":
@@ -31,7 +38,8 @@ export default function createStatementData(invoice, plays) {
 
       case "comedy":
         result = 30000;
-        if (aPerformance.audience > 20) result += 1000 * (aPerformance.audience - 30)
+        if (aPerformance.audience > 20) result += 1000 + 500 * (aPerformance.audience - 30)
+        result += 300 * aPerformance.audience
         break;
 
       default:
@@ -56,5 +64,11 @@ export default function createStatementData(invoice, plays) {
 
   function totalAmount(data) {
     return data.performances.reduce((total, p) => total + p.volumeCredits, 0)
+  }
+}
+
+class PerformanceCalculator {
+  constructor(aPerformance) {
+    this.performance = aPerformance
   }
 }
