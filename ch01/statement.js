@@ -32,8 +32,12 @@ function statement(invoice, plays) {
   let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice[0].customer})\n`;
 
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
+
   for (let perf of invoice[0].performances) {
-    const play = plays[perf.playID];
+    const play = playFor(perf)
     let thisAmount = amountFor(perf, play) // 추출한 함수 이용
 
     // 포인트 적립
