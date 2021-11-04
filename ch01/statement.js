@@ -12,7 +12,13 @@ const plays = require('./plays.json')
 function statement(invoice, plays) {
   const statementData = {} // 중간 데이터
   statementData.customer = invoice.customer // 고객데이터를 중간데이터로
-  statementData.performances = invoice.performances
+  statementData.performances = invoice.performances.map(enrichPerformance)
+
+  function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance)
+
+    return result
+  }
 
   return renderPlainText(statementData, plays)
 }
