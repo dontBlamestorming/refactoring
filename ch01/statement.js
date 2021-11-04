@@ -16,6 +16,33 @@ function statement(invoice, plays) {
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance)
+    result.play = playFor(result) // 중간 데이터에 연극 정보 저장
+    result.amount = amountFor(result)
+
+    return result
+  }
+
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
+
+  function amountFor(aPerformance) { // 값이 바뀌지 않는 변수는 매개변수로 전달
+    let result = 0; // 변수를 초기화 && 명확한 이름으로 변경
+
+    switch (aPerformance.play.type) {
+      case "tragedy":
+        result = 40000;
+        if (aPerformance.audience > 30) result += 1000 * (aPerformance.audience - 30)
+        break;
+
+      case "comedy":
+        result = 30000;
+        if (aPerformance.audience > 20) result += 1000 * (aPerformance.audience - 30)
+        break;
+
+      default:
+        throw new Error(`알 수 없는 장르: ${aPerformance.play.type}`)
+    }
 
     return result
   }
@@ -27,7 +54,7 @@ function renderPlainText(data, plays) { // 필요 없어진 invoice 삭제
   let result = `청구 내역 (고객명: ${data.customer})\n`; // 중간데이터로부터 고객데이터 확보
 
   for (let perf of data.performances) {
-    result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`
+    result += `${perf.play.name}: ${perf.amount} (${perf.audience}석)\n`
   }
 
   result += `총액: ${usd(totalAmount())}\n`
@@ -47,32 +74,7 @@ function renderPlainText(data, plays) { // 필요 없어진 invoice 삭제
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
 
-    if ("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5)
-
-    return result
-  }
-
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
-  }
-
-  function amountFor(aPerformance) { // 값이 바뀌지 않는 변수는 매개변수로 전달
-    let result = 0; // 변수를 초기화 && 명확한 이름으로 변경
-
-    switch (playFor(aPerformance).type) {
-      case "tragedy":
-        result = 40000;
-        if (aPerformance.audience > 30) result += 1000 * (aPerformance.audience - 30)
-        break;
-
-      case "comedy":
-        result = 30000;
-        if (aPerformance.audience > 20) result += 1000 * (aPerformance.audience - 30)
-        break;
-
-      default:
-        throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`)
-    }
+    if ("comedy" === aPerformance.play.type) result += Math.floor(aPerformance.audience / 5)
 
     return result
   }
@@ -91,7 +93,7 @@ function renderPlainText(data, plays) { // 필요 없어진 invoice 삭제
     let result = 0;
 
     for (let perf of data.performances) {
-      result += amountFor(perf)
+      result += perf.amount
     }
 
     return result
