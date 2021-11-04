@@ -1,18 +1,18 @@
 const invoices = require('./invoices.json')
 const plays = require('./plays.json')
 
-function amountFor(perf, play) { // 값이 바뀌지 않는 변수는 매개변수로 전달
+function amountFor(aPerformance, play) { // 값이 바뀌지 않는 변수는 매개변수로 전달
   let result = 0; // 변수를 초기화 && 명확한 이름으로 변경
 
   switch (play.type) {
     case "tragedy":
       result = 40000;
-      if (perf.audience > 30) result += 1000 * (perf.audience - 30)
+      if (aPerformance.audience > 30) result += 1000 * (aPerformance.audience - 30)
       break;
 
     case "comedy":
       result = 30000;
-      if (perf.audience > 20) result += 1000 * (perf.audience - 30)
+      if (aPerformance.audience > 20) result += 1000 * (aPerformance.audience - 30)
       break;
 
     default:
