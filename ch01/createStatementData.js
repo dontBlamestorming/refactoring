@@ -4,6 +4,10 @@
         상속계층을 구성하여 희극 서브클래스와 비극 서브클래스가 각자의 구체적인 계산로직을 정의하는 것이다.
 */
 
+function createPerformanceCalculator(aPerformance, aPlay) {
+  return new PerformanceCalculator(aPerformance, aPlay)
+}
+
 export default function createStatementData(invoice, plays) {
   const result = {}
   result.customer = invoice.customer
@@ -14,7 +18,7 @@ export default function createStatementData(invoice, plays) {
   return result
 
   function enrichPerformance(aPerformance) { // ***
-    const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance))
+    const calculator = createPerformanceCalculator(aPerformance, playFor(aPerformance)) // <-- 생성자 대신 팩터리 함수 사용
     const result = Object.assign({}, aPerformance)
     result.play = calculator.play
     result.amount = calculator.amount
