@@ -16,7 +16,6 @@ function statement(invoice, plays) {
   statementData.totalAmount = totalAmount(statementData)
   statementData.totalVolumeCredits = totalVolumeCredits(statementData)
 
-
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance)
     result.play = playFor(result) // 중간 데이터에 연극 정보 저장
@@ -61,23 +60,11 @@ function statement(invoice, plays) {
   }
 
   function totalVolumeCredits(data) {
-    let result = 0;
-
-    for (let perf of data.performances) {
-      result += perf.volumeCredits;
-    }
-
-    return result
+    return data.performances.reduce((total, p) => total + p.amount, 0)
   }
 
   function totalAmount(data) {
-    let result = 0;
-
-    for (let perf of data.performances) {
-      result += perf.amount
-    }
-
-    return result
+    return data.performances.reduce((total, p) => total + p.volumeCredits, 0)
   }
 
   return renderPlainText(statementData, plays)
@@ -102,7 +89,6 @@ function renderPlainText(data, plays) { // 필요 없어진 invoice 삭제
       minimumFractionDigits: 2
     }).format(aNumber / 100)
   }
-
 
 
 }
