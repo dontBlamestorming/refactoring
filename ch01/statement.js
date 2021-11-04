@@ -10,14 +10,17 @@ const plays = require('./plays.json')
 */
 
 function statement(invoice, plays) {
-  const statementData = {}
-  return renderPlainText(statementData, invoice, plays)
+  const statementData = {} // 중간 데이터
+  statementData.customer = invoice.customer // 고객데이터를 중간데이터로
+  statementData.performances = invoice.performances
+
+  return renderPlainText(statementData, plays)
 }
 
-function renderPlainText(data, invoice, plays) {
-  let result = `청구 내역 (고객명: ${invoice[0].customer})\n`;
+function renderPlainText(data, plays) { // 필요 없어진 invoice 삭제
+  let result = `청구 내역 (고객명: ${data.customer})\n`; // 중간데이터로부터 고객데이터 확보
 
-  for (let perf of invoice[0].performances) {
+  for (let perf of data.performances) {
     result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`
   }
 
@@ -33,6 +36,7 @@ function renderPlainText(data, invoice, plays) {
       minimumFractionDigits: 2
     }).format(aNumber / 100)
   }
+
   function volumeCreditsFor(aPerformance) {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
@@ -41,9 +45,11 @@ function renderPlainText(data, invoice, plays) {
 
     return result
   }
+
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
   }
+
   function amountFor(aPerformance) { // 값이 바뀌지 않는 변수는 매개변수로 전달
     let result = 0; // 변수를 초기화 && 명확한 이름으로 변경
 
@@ -64,19 +70,21 @@ function renderPlainText(data, invoice, plays) {
 
     return result
   }
+
   function totalVolumeCredits() {
     let result = 0;
 
-    for (let perf of invoice[0].performances) {
+    for (let perf of data.performances) {
       result += volumeCreditsFor(perf)
     }
 
     return result
   }
+
   function totalAmount() {
     let result = 0;
 
-    for(let perf of invoice[0].performances) {
+    for (let perf of data.performances) {
       result += amountFor(perf)
     }
 
