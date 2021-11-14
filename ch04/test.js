@@ -24,11 +24,34 @@ describe('Province', function() {
   })
 
   it('change production', function() {
-    // 복잡한 함수의 경우 임의의 값으로도 정상적으로 동작하는지 확인할 필요가 있다.
-    asia.producers[0].production = 20   // 특정 조건을 setup, given, arrange
+    asia.producers[0].production = 20
 
-    expect(asia.shortfall)    // exercise, when, act
-      .equal(-6)    // verify, then, assert
+    expect(asia.shortfall).equal(-6)
     expect(asia.profit).equal(292)
   })
+})
+
+describe('no producers', function() {
+  //  이 프로그램의 핵심 data인 producers가 없는 경우라면?
+  let noProducers;
+
+  beforeEach(function() {
+    const data = {
+      name: "No producers",
+      producers: [],
+      demand: 30,
+      price: 20
+    }
+
+    noProducers = new Province(data)
+  })
+
+  it('shortfall', function() {
+    expect(noProducers.shortfall).equal(30)   // 생산자가 없으므로 생산부족분은 수요와 동일하다.
+  })
+
+  it('profit', function() {
+    expect(noProducers.profit).equal(0)   // 생산량이 없으므로 이윤도 없다.
+  })
+
 })
