@@ -9,19 +9,8 @@ const Province = require('./province')
 const sampleProvinceData = require('./main')
 
 describe('Province', function() {
-  /*
-    const asia = new Province(sampleProvinceData())
-    - 중복코드를 제거할 때 절대 이렇게 하면 안된다.
-    - 왜냐하면 공유된 픽스처로 실행하는 테스트는 순서에 따라 결과가 달라질 수 있다.
-  */
-
   let asia
   beforeEach(function() {
-    /*
-      각각의 테스트 바로 전에 실행되어 asia를 초기화
-      모든 테스트들이 동일한 픽스처에 기반하여 검증을 수행하는 것을 명시
-      하지만 테스트가 픽스처 값을 변경하지 않거나 불변임이 확실한 픽스처는 공유하기도 함
-    */
     asia = new Province(sampleProvinceData())
   })
 
@@ -32,5 +21,14 @@ describe('Province', function() {
 
   it('profit', function() {
     expect(asia.profit).equal(230)
+  })
+
+  it('change production', function() {
+    // 복잡한 함수의 경우 임의의 값으로도 정상적으로 동작하는지 확인할 필요가 있다.
+    asia.producers[0].production = 20   // 특정 조건을 setup, given, arrange
+
+    expect(asia.shortfall)    // exercise, when, act
+      .equal(-6)    // verify, then, assert
+    expect(asia.profit).equal(292)
   })
 })
