@@ -42,11 +42,17 @@ describe('Province', function() {
 
     expect(asia.shortfall).equal(-26)
     expect(asia.profit).equal(-10)
+  })
+
+  it('empty string demand', function() {
     /*
-      수요가 음수일 때 수익이 음수가 나온다는 것이 프로그램을 사용하는 사용자 입장에서 어색하다.
-      수요 setter에 전달된 인수가 음수라면 수익은 Error or 0으로 나오는 것이 어색하지 않다.
-      이렇게 경계를 확인하는 Test code는 처리해야하는 특정 상황에 대한 통찰을 주기도 한다.
+      이 프로그램의 setter는 의미상 숫자만 입력받아야하지만 UI로부터 문자열을 취하고있다.
+      이렇게 의식적으로 프로그램을 망가뜨리는 방법을 생각해보자
     */
+    asia.demand = ""
+
+    expect(asia.shortfall).NaN
+    expect(asia.profit).NaN
   })
 })
 
