@@ -29,10 +29,28 @@ describe('Province', function() {
     expect(asia.shortfall).equal(-6)
     expect(asia.profit).equal(292)
   })
+
+  it('zero demand', function() {
+    asia.demand = 0
+
+    expect(asia.shortfall).equal(-25)
+    expect(asia.profit).equal(0)
+  })
+
+  it('negative demand', function() {
+    asia.demand = -1
+
+    expect(asia.shortfall).equal(-26)
+    expect(asia.profit).equal(-10)
+    /*
+      수요가 음수일 때 수익이 음수가 나온다는 것이 프로그램을 사용하는 사용자 입장에서 어색하다.
+      수요 setter에 전달된 인수가 음수라면 수익은 Error or 0으로 나오는 것이 어색하지 않다.
+      이렇게 경계를 확인하는 Test code는 처리해야하는 특정 상황에 대한 통찰을 주기도 한다.
+    */
+  })
 })
 
 describe('no producers', function() {
-  //  이 프로그램의 핵심 data인 producers가 없는 경우라면?
   let noProducers;
 
   beforeEach(function() {
@@ -47,11 +65,11 @@ describe('no producers', function() {
   })
 
   it('shortfall', function() {
-    expect(noProducers.shortfall).equal(30)   // 생산자가 없으므로 생산부족분은 수요와 동일하다.
+    expect(noProducers.shortfall).equal(30)
   })
 
   it('profit', function() {
-    expect(noProducers.profit).equal(0)   // 생산량이 없으므로 이윤도 없다.
+    expect(noProducers.profit).equal(0)
   })
 
 })
