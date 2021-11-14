@@ -45,10 +45,6 @@ describe('Province', function() {
   })
 
   it('empty string demand', function() {
-    /*
-      이 프로그램의 setter는 의미상 숫자만 입력받아야하지만 UI로부터 문자열을 취하고있다.
-      이렇게 의식적으로 프로그램을 망가뜨리는 방법을 생각해보자
-    */
     asia.demand = ""
 
     expect(asia.shortfall).NaN
@@ -77,5 +73,17 @@ describe('no producers', function() {
   it('profit', function() {
     expect(noProducers.profit).equal(0)
   })
+})
 
+describe('string for producers', function() {
+  it('', function() {
+    const data = {
+      name: "String producers",
+      producers: "",
+      demand: 30,
+      price: 20
+    }
+    const prov = new Province(data)
+    expect(prov.shortfall).equal(0)
+  })
 })
