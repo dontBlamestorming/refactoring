@@ -1,4 +1,6 @@
-const assert = require('assert');
+const chai = require('chai')
+const assert = chai.assert
+const expect = chai.expect
 
 // classes
 const Province = require('./province')
@@ -10,6 +12,6 @@ describe('Province', function() {
   it('shortfall', function() {
     const asia = new Province(sampleProvinceData()) // fixture
 
-    assert.equal(asia.shortfall, 5) // 검증
+    expect(asia.shortfall).equal(5)
   })
 })
