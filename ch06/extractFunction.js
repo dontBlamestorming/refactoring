@@ -3,7 +3,7 @@ function printOwing(invoice) {
 
   printBanner()
 
-  let outstanding = 0; // #1 맨 위에 있던 선언문을 이 위치로 이동.
+  let outstanding = 0;
   for(const o of invoice.orders) {
     outstanding += o.amount
   }
@@ -16,6 +16,15 @@ function printOwing(invoice) {
   이전 2개의 커밋과 같이 지역 변수에 다른 값을 대입하는 것이 아닌 참조(Read)만 하는 경우
   매개변수로 넘겨서 활용해도 된다. 객체인 경우는 필드값을 수정할 수 있다(참조의 관계이므로).
 */
+
+function calculateOutstanding(invoice) {
+  let outstanding = 0; // #2 추출할 코드를 복사한다.
+  for(const o of invoice.orders) {
+    outstanding += o.amount
+  }
+
+  return outstanding // #2-1 수정된 값 반환
+}
 
 function recordDueDate(invoice) {
   const today = Clock.today
